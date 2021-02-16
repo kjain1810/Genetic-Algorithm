@@ -3,6 +3,7 @@ from .client import get_errors
 TEAM_KEY = ""
 
 VECTOR_SIZE = 11
+POPULATION_SIZE = 20
 
 
 def main():
