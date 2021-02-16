@@ -9,22 +9,28 @@ given_data = [0.0, -1.45799022e-12, -2.28980078e-13,  4.62010753e-11, -1.7521481
 
 
 def init_values(POPULATION_SIZE, VECTOR_SIZE=11):
-    initial_values = [[x for x in given_data] for i in range(POPULATION_SIZE)]
+    initial_values = []
+    for i in range(POPULATION_SIZE):
+        here = []
+        for j in range(len(given_data)):
+            here.append(given_data[j])
+        initial_values.append(here)
     random.seed(time.time())
     for i in range(POPULATION_SIZE):
         for j in range(VECTOR_SIZE):
             x = random.random()
-            if x < 0.7:  # TUNE
+            if x < 0.6:  # TUNE
                 initial_values[i][j] = 0.0
             else:
-                toadd = random.random() * 2 - 1
-                if abs(initial_values[i][j] + toadd * initial_values[i][j] * 10) <= 10:
-                    initial_values[i][j] += toadd * initial_values[i][j] * 10
-    for i in range(POPULATION_SIZE):
-        for j in range(VECTOR_SIZE):
-            if initial_values[i][j] != 0:
-                print(initial_values[i][j], end=" ")
-        print("")
+                factor = random.random() * 0.2 + 0.9
+                if abs(initial_values[i][j] * factor) <= 10:
+                    initial_values[i][j] *= factor
+            # print(factor, initial_values[i][j])
+    # for i in range(POPULATION_SIZE):
+    #     for j in range(VECTOR_SIZE):
+    #         if initial_values[i][j] != 0:
+    #             print(initial_values[i][j], end=" ")
+    #     print("")
     return initial_values
 
 
