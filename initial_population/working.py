@@ -13,7 +13,7 @@ def get_initial_value(POPULATION_SIZE, VECTOR_SIZE=11):
     for i in range(POPULATION_SIZE):
         temp = []
         for j in range(VECTOR_SIZE):
-            random_power = np.random.randint(-20, 1)
+            random_power = np.random.randint(-12, -3)
             random_number = np.random.random()*2 - 1
             temp.append(random_number*(10**random_power))
         initial_values.append(temp)
