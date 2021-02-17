@@ -1,7 +1,9 @@
 import json
 
+from numpy.core.fromnumeric import shape
+
 from client import get_errors
-from initial_population.working_kunal import init_values
+from initial_population.working import get_initial_value
 
 TEAM_KEY = "prTwq7vUkLegXASklNtVBIA7O8YxRRbYQE8LAnsDrmrx6A0fH1"
 
@@ -13,9 +15,10 @@ overfit_vector = [0.0, -1.45799022e-12, -2.28980078e-13,  4.62010753e-11, -1.752
 
 def main():
     # myvecs = [overfit_vector * 2]
-    myvecs = init_values(POPULATION_SIZE, VECTOR_SIZE)
+    myvecs = get_initial_value(POPULATION_SIZE, VECTOR_SIZE)
     with open("./init_vecs.json") as f:
         results = json.load(f)
+    # print(myvecs)
     for vec in myvecs:
         res = get_errors(TEAM_KEY, vec)
         results["vectors"].append({

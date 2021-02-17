@@ -21,15 +21,18 @@ mean = np.mean(given_data)
 
 #     return initial_values
 
-def get_initial_value(POPULATION_SIZE, VECTOR_SIZE = 11):
+def get_initial_value(POPULATION_SIZE, VECTOR_SIZE=11):
     initial_value = []
     for i in range(POPULATION_SIZE):
         temp = []
         for j in range(VECTOR_SIZE):
             trial = given_data[j]
-            power = np.floor(np.log10(np.abs(trial)))
-            randomNumber = ((np.random.random()*2) - 1)* 10
-            temp.append(trial*(np.random.random()*2 - 1) + (randomNumber)*(10**power))
+            power = 0
+            if(trial != 0):
+                power = np.floor(np.log10(np.abs(trial)))
+            randomNumber = ((np.random.random()*2) - 1)/100
+            temp.append(trial*(1 - (np.random.random()*2 - 1)/1000) + (randomNumber)*(10**power))
+        temp[0] = 0
         initial_value.append(temp)
     return initial_value
 
