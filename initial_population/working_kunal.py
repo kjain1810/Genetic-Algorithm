@@ -18,22 +18,20 @@ def init_values(POPULATION_SIZE, VECTOR_SIZE=11):
     random.seed(time.time())
     for i in range(POPULATION_SIZE):
         for j in range(VECTOR_SIZE):
+            # x = random.uniform(-1e-12, 1e-12)
             x = random.random()
             if x < 0.6:  # TUNE
-                initial_values[i][j] = 0.0
-            else:
-                factor = random.random() * 0.2 + 0.9
+                y = random.uniform(-1e-15, 1e-15)
+                if abs(initial_values[i][j] + y) <= 10:
+                    initial_values[i][j] += y
+                #     initial_values[i][j] = 0.0
+                # else:
+                factor = random.random() * 0.002 + 0.999
                 if abs(initial_values[i][j] * factor) <= 10:
                     initial_values[i][j] *= factor
-            # print(factor, initial_values[i][j])
-    # for i in range(POPULATION_SIZE):
-    #     for j in range(VECTOR_SIZE):
-    #         if initial_values[i][j] != 0:
-    #             print(initial_values[i][j], end=" ")
-    #     print("")
     return initial_values
 
 
 if __name__ == "__main__":
-    # print(init_values(20))
-    init_values(20)
+    print(init_values(20))
+    # init_values(20)
