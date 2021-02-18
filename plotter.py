@@ -13,14 +13,16 @@ x = []
 y = []
 xx = 0
 yy = 0
+diffs = []
 for vec in vectors:
     if vec["vector"] == overfit_vector:
         xx = vec["train_error"]
         yy = vec["val_error"]
-    if vec["val_error"] < 1e12:
+    if vec["train_error"] < 1e12 and vec["val_error"] < 1e12:
         x.append(vec["train_error"])
         y.append(vec["val_error"])
-
+        diffs.append(vec["val_error"] - vec["train_error"])
+print(sorted(diffs))
 plt.plot(x, y, 'o')
 plt.plot([xx], [yy], 'o', color="red")
 plt.xlabel("Training error")

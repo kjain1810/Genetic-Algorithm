@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import time
+import json
 
 # from .working import get_initial_value
 
@@ -27,6 +28,20 @@ def init_values(POPULATION_SIZE, VECTOR_SIZE=11):
                 if abs(initial_values[i][j] * factor) <= 10:
                     initial_values[i][j] *= factor
     return initial_values
+
+
+def load_inits(POPULATION_SIZE, VECTOR_SIZE=11):
+    inits = []
+    with open("./sorted_vecs.json") as f:
+        vecs = json.load(f)
+    vecs = vecs["vectors"]
+    for i in range(len(vecs)):
+        x = random.random()
+        if x <= 0.9:
+            inits.append(np.array(vecs[i]["vector"]))
+        if len(inits) == POPULATION_SIZE:
+            return inits
+    return inits
 
 
 if __name__ == "__main__":
