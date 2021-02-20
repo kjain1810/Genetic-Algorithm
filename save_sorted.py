@@ -1,6 +1,8 @@
 import json
 import numpy as np
 
+from fitness.working import fitness
+
 init = np.array([
     0.0,
     -1.45799022e-12,
@@ -20,7 +22,8 @@ with open("./init_vecs.json") as f:
     results = json.load(f)
 
 results = results["vectors"]
-results = sorted(results, key=lambda i: i["val_error"] + i["train_error"])
+results = sorted(results, key=lambda i: fitness(
+    [i["train_error"], i["val_error"]]))
 
 results = {"vectors": results}
 with open("./sorted_vecs.json", "w") as f:

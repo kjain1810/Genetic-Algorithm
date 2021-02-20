@@ -3,10 +3,19 @@ import random
 import time
 import json
 
+# from ..fitness_func.working import fitness
+
+
+def fitness(res, FACTOR=0.7):
+    return res[0] * FACTOR + res[1]
+
+
 # from .working import get_initial_value
 
 given_data = [0.0, -1.45799022e-12, -2.28980078e-13,  4.62010753e-11, -1.75214813e-10, -
               1.83669770e-15,  8.52944060e-16,  2.29423303e-05, -2.04721003e-06, -1.59792834e-08,  9.98214034e-10]
+
+big_change = [0, 1, 2, 3, 4, 6]
 
 
 def init_values(POPULATION_SIZE, VECTOR_SIZE=11):
@@ -19,14 +28,20 @@ def init_values(POPULATION_SIZE, VECTOR_SIZE=11):
     random.seed(time.time())
     for i in range(POPULATION_SIZE):
         for j in range(VECTOR_SIZE):
-            x = random.random()
-            if x < 0.5:  # TUNE
-                y = random.uniform(-1e-18, 1e-18)
-                if abs(initial_values[i][j] + y) <= 10:
-                    initial_values[i][j] += y
-                factor = random.random() * 0.2 + 0.9
-                if abs(initial_values[i][j] * factor) <= 10:
-                    initial_values[i][j] *= factor
+            if j in big_change:
+                initial_values[i][j] = random.uniform(-1, 1)
+            else:
+                initial_values[i][j] = initial_values[i][j] * \
+                    random.uniform(0.9999, 1.0001) + \
+                    random.uniform(-1e-18, 1e-18)
+            # x = random.random()
+            # if x < 0.5:  # TUNE
+            #     y = random.uniform(-1e-18, 1e-18)
+            #     if abs(initial_values[i][j] + y) <= 10:
+            #         initial_values[i][j] += y
+            #     factor = random.random() * 0.2 + 0.9
+            #     if abs(initial_values[i][j] * factor) <= 10:
+            #         initial_values[i][j] *= factor
     return initial_values
 
 
@@ -35,12 +50,17 @@ def load_inits(POPULATION_SIZE, VECTOR_SIZE=11):
     with open("./sorted_vecs.json") as f:
         vecs = json.load(f)
     vecs = vecs["vectors"]
-    for i in range(len(vecs)):
-        x = random.random()
-        if x <= 0.9:
-            inits.append(np.array(vecs[i]["vector"]))
-        if len(inits) == POPULATION_SIZE:
-            return inits
+    vecs = sorted(vecs, key=lambda i: fitness(
+        [i["train_error"], i["val_error"]]))
+    for i in range(POPULATION_SIZE):
+        x = random.randint(0, len(vecs))
+        inits.append(np.array(vecs[x]["vector"]))
+    # for i in range(len(vecs)):
+    #     x = random.random()
+    #     if x <= 0.9:
+    #         inits.append(np.array(vecs[i]["vector"]))
+    #     if len(inits) == POPULATION_SIZE:
+    #         return inits
     return inits
 
 
