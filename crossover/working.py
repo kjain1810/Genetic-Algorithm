@@ -34,7 +34,7 @@ def average_crossover(vec1, vec2):
     return (vec1 + vec2) / 2
 
 
-def BSC(vec1, vec2, N=8, VECTOR_SIZE=11):
+def BSC(vec1, vec2, N=5, VECTOR_SIZE=11):
     ret1 = np.zeros(11)
     ret2 = np.zeros(11)
     x = random.random()

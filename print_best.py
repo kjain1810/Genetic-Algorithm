@@ -1,6 +1,15 @@
 import json
 import numpy as np
 
+
+def fitness(res, FACTOR=0.7):
+    return res[0] * FACTOR + res[1]
+
+
+def fitness_2(res):
+    return 1 / ((res[0] + res[1]) - 2 * abs(res[0] - res[1]))
+
+
 init = np.array([
     0.0,
     -1.45799022e-12,
@@ -16,13 +25,24 @@ init = np.array([
 ])
 
 
-with open("./init_vecs.json") as f:
+with open("./generations.json") as f:
     results = json.load(f)
 
-results = results["vectors"]
-results = sorted(results, key=lambda i: i["val_error"])
+results = results["results"]
 
-for res in results:
-    x = np.array(res["vector"])
+here = []
+
+for x in results:
+    if x["generation"] != 2:
+        continue
+    y = x["vectors"]
+    for z in y:
+        here.append(z)
+
+here = sorted(here, key=lambda i: fitness(i["results"]))
+
+for i in range(len(here)):
+    res = here[i]
+    x = np.array(res['vector'])
     dist = np.linalg.norm(x-init)
-    print(res["val_error"], dist)
+    print(res["results"][0]/1e11, res["results"][1]/1e11, dist)

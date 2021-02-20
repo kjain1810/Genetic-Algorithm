@@ -39,7 +39,7 @@ def main():
             print(res1[0]/1e11, res1[1]/1e11, x1)
             print(res2[0]/1e11, res2[1]/1e11, x2)
             print("")
-    results = {"generation": 1, "vectors": results, "parents": []}
+    results = {"generation": 3, "vectors": results, "parents": []}
     for i in range(3):
         results["parents"].append(vecs[i].tolist())
     otp.append(results)
