@@ -33,16 +33,22 @@ results = results["results"]
 here = []
 
 for x in results:
-    if x["generation"] != 2:
-        continue
+    # if x["generation"] != 2:
+    #     continue
     y = x["vectors"]
     for z in y:
         here.append(z)
 
 here = sorted(here, key=lambda i: fitness(i["results"]))
 
-for i in range(len(here)):
+bests = []
+
+for i in range(60):
     res = here[i]
+    bests.append(res)
     x = np.array(res['vector'])
     dist = np.linalg.norm(x-init)
     print(res["results"][0]/1e11, res["results"][1]/1e11, dist)
+
+with open("new_vectors.json", "w") as f:
+    json.dump({"vectors": bests}, f)

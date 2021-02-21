@@ -6,6 +6,7 @@ from client import get_errors
 from initial_population.working_kunal import load_inits, init_values
 from crossover.working import point_crossover
 from mutation.working import mutate
+from fitness_func.working import fitness
 
 TEAM_KEY = "prTwq7vUkLegXASklNtVBIA7O8YxRRbYQE8LAnsDrmrx6A0fH1"
 
@@ -69,3 +70,4 @@ def main2():
 
 if __name__ == '__main__':
     main()
+    # experiment()
