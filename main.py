@@ -7,6 +7,7 @@ from initial_population.working_kunal import load_inits, init_values
 from crossover.working import point_crossover
 from mutation.working import mutate
 from fitness_func.working import fitness
+from selection.working import select
 
 TEAM_KEY = "prTwq7vUkLegXASklNtVBIA7O8YxRRbYQE8LAnsDrmrx6A0fH1"
 
@@ -17,6 +18,22 @@ overfit_vector = [0.0, -1.45799022e-12, -2.28980078e-13,  4.62010753e-11, -1.752
 
 
 def main():
+    init = load_inits(50)
+    vecs = select(init, 10)
+
+    for generation in range(1, 11):
+        # SELECT PARENTS
+        # DO CROSSOVER OF PARENTS
+        # DO MUTATIONS ON CHILDREN
+        # GET ERRORS
+        # ADD CHILDREN TO LIST
+        # GET FITNESS OF CHILDREN
+        pass
+
+    # print(vecs)
+
+
+def main1():
     vecs = load_inits(3)
     with open("./generations.json") as f:
         otp = json.load(f)

@@ -52,15 +52,12 @@ def load_inits(POPULATION_SIZE, VECTOR_SIZE=11):
     res = res["results"]
     vecs = []
     for x in res:
-        if x["generation"] == 1:
-            continue
         y = x["vectors"]
         for z in y:
             vecs.append(z)
     vecs = sorted(vecs, key=lambda i: fitness(i["results"]))
     for i in range(POPULATION_SIZE):
-        x = random.randint(0, len(vecs))
-        inits.append(np.array(vecs[x]["vector"]))
+        inits.append(vecs[i])
     # for i in range(len(vecs)):
     #     x = random.random()
     #     if x <= 0.9:
