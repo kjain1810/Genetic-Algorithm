@@ -1,10 +1,11 @@
 import json
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 from client import get_errors
 from initial_population.working_kunal import load_inits, init_values
-from crossover.working import BSC
+from crossover.working import K_point_crossover
 from mutation.working import mutate
 from fitness_func.working import fitness
 from selection.working import select, get_mating_pool
@@ -18,39 +19,57 @@ overfit_vector = [0.0, -1.45799022e-12, -2.28980078e-13,  4.62010753e-11, -1.752
 
 
 def main():
-    init = load_inits(50)
+    init = load_inits(30)
+    # # for i in range(len(init)):
+    # #     for j in range(len(init)):
+    # #         print(int(np.linalg.norm(
+    # #             np.array(init[i]["vector"]) - np.array(init[j]["vector"])) * 10000000000), end=" ")
+    # #     print("")
+    # child1, child2 = K_point_crossover(
+    #     np.array(init[0]["vector"]), np.array(init[9]["vector"]), crossoverprob=0.8)
+    # print(child1)
+    # child1 = mutate(child1)
+    # print(child1)
+    # res = get_errors(TEAM_KEY, child1.tolist())
+    # print(res[0]/1e11, res[1]/1e11)
+    # return
     POPULATION_SIZE = 10
     mating_pool = select(init, POPULATION_SIZE)
-
-    for generation in range(1, 11):
+    init = [vec for vec in init if vec not in mating_pool]
+    dists = []
+    for generation in range(1, 6):
+        print("Generation", generation)
         # SELECT PARENTS
         parents = get_mating_pool(POPULATION_SIZE)
         # DO CROSSOVER OF PARENTS
         children = []
         for i in range(len(parents)):
-            child1, child2 = BSC(
-                np.array(mating_pool[parents[i][0]]["vector"]), np.array(mating_pool[parents[i][1]]["vector"]))
+            child1, child2 = K_point_crossover(
+                np.array(mating_pool[parents[i][0]]["vector"]), np.array(mating_pool[parents[i][1]]["vector"]), crossoverprob=0.85 - generation/20)
             children.append(child1)
             children.append(child2)
         # DO MUTATIONS ON CHILDREN
-        for i in len(children):
+        for i in range(len(children)):
             children[i] = mutate(children[i])
         # GET ERRORS
         errors = []
-        # for child in children:
-        #     res = get_errors(TEAM_KEY, child.tolist())
-        #     print(res[0]/1e11, res[1]/1e11)
-        #     errors.append({"vector": child.tolist(), "results": res})
+        for child in children:
+            # res = [0, 0]
+            res = get_errors(TEAM_KEY, child.tolist())
+            print(res[0]/1e11, res[1]/1e11,
+                  np.linalg.norm(child - np.array(overfit_vector)))
+            errors.append({"vector": child.tolist(), "results": res})
+            init.append({"vector": child.tolist(), "results": res})
         # ADD CHILDREN TO LIST
         with open("new_gen.json") as f:
             oldres = json.load(f)
         oldres = oldres["generations"]
         oldres.append({"generation": generation, "vectors": errors})
+        oldres = {"generations": oldres}
         with open("new_gen.json", "w") as f:
             json.dump(oldres, f)
-        mating_pool = errors
-
-    # print(vecs)
+        mating_pool = select(init, POPULATION_SIZE)
+        init = [vec for vec in init if vec not in mating_pool]
 
 
 def main1():

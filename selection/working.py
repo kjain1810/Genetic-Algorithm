@@ -1,6 +1,9 @@
 import random
+import time
 
 from fitness_func.working import fitness
+
+random.seed(time.time())
 
 
 def select(vecs, POPULATION_SIZE):
@@ -17,11 +20,11 @@ def select(vecs, POPULATION_SIZE):
 
 def get_mating_pool(POPULATION_SIZE):
     ret = []
-    for i in range(POPULATION_SIZE/2):
-        x = random.randint(0, POPULATION_SIZE)
-        y = random.randint(0, POPULATION_SIZE)
-        while (x, y) in ret:
-            x = random.randint(0, POPULATION_SIZE)
-            y = random.randint(0, POPULATION_SIZE)
+    for i in range(int(POPULATION_SIZE/2)):
+        x = random.randint(0, POPULATION_SIZE - 1)
+        y = random.randint(0, POPULATION_SIZE - 1)
+        while ((x, y) in ret and x != y and (y, x) not in ret):
+            x = random.randint(0, POPULATION_SIZE - 1)
+            y = random.randint(0, POPULATION_SIZE - 1)
         ret.append((x, y))
     return ret
