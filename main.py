@@ -18,6 +18,10 @@ overfit_vector = [0.0, -1.45799022e-12, -2.28980078e-13,  4.62010753e-11, -1.752
                   1.83669770e-15,  8.52944060e-16,  2.29423303e-05, -2.04721003e-06, -1.59792834e-08,  9.98214034e-10]
 
 
+# TODO: cross BSC results with K-point
+# TODO: cross K-point with BSC
+# TODO: take best of k point and bsc, do k point with them
+
 def main():
     init = load_inits(30)
     POPULATION_SIZE = 16
