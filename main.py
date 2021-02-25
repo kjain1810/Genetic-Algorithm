@@ -18,21 +18,6 @@ overfit_vector = [0.0, -1.45799022e-12, -2.28980078e-13,  4.62010753e-11, -1.752
                   1.83669770e-15,  8.52944060e-16,  2.29423303e-05, -2.04721003e-06, -1.59792834e-08,  9.98214034e-10]
 
 
-vector = np.array([
-    -1.3654065201456817e-18,
-    -1.2225186325279189e-12,
-    -2.576119962512163e-13,
-    5.152551080390546e-11,
-    -1.4800436880250733e-10,
-    -1.7336464013051853e-15,
-    7.588385881788844e-16,
-    2.7525165125385616e-05,
-    -1.912836290662139e-06,
-    -1.8377602559204756e-08,
-    9.349425579786786e-10
-])
-
-
 def main():
     init = load_inits(30)
     POPULATION_SIZE = 16
@@ -48,8 +33,8 @@ def main():
         # DO CROSSOVER OF PARENTS
         children = []
         for i in range(len(parents)):
-            child1, child2 = K_point_crossover(
-                np.array(mating_pool[parents[i][0]]["vector"]), np.array(mating_pool[parents[i][1]]["vector"]), crossoverprob=max(0.6, 0.85 - generation/100))
+            child1, child2 = BSC(
+                np.array(mating_pool[parents[i][0]]["vector"]), np.array(mating_pool[parents[i][1]]["vector"]), N=min(8, 5 + generation/5))
             children.append({"child": child1, "parents": [
                             mating_pool[parents[i][0]], mating_pool[parents[i][1]]]})
             children.append({"child": child2, "parents": [
@@ -68,12 +53,12 @@ def main():
             errors.append({"vector": child, "results": res})
             init.append({"vector": child["child"], "results": res})
         # ADD CHILDREN TO LIST
-        with open("new_gen_1.json") as f:
+        with open("new_gen_2.json") as f:
             oldres = json.load(f)
         oldres = oldres["generations"]
         oldres.append({"generation": generation, "vectors": errors})
         oldres = {"generations": oldres}
-        with open("new_gen_1.json", "w") as f:
+        with open("new_gen_2.json", "w") as f:
             json.dump(oldres, f)
         mating_pool = select(init, POPULATION_SIZE)
         init = [vec for vec in init if vec not in mating_pool]
