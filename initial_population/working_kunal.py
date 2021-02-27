@@ -66,6 +66,16 @@ def load_inits(POPULATION_SIZE, VECTOR_SIZE=11):
     #         return inits
     return inits
 
+def load_prev_gens(file, generation):
+    with open(file) as f:
+        res = json.load(f)
+
+    inits = []
+    for gen in res["generations"]:
+        if(gen["generation"] == generation):
+            inits.append(gen["vectors"])
+    return inits
+
 
 if __name__ == "__main__":
     print(init_values(20))
