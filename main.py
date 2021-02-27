@@ -24,7 +24,7 @@ overfit_vector = [0.0, -1.45799022e-12, -2.28980078e-13,  4.62010753e-11, -1.752
 
 def main():
     # init = load_inits(30)
-    temp_init = load_prev_gens("new_gen_1.json", 31)[0]
+    temp_init = load_prev_gens("new_gen_2.json", 31)[0]
     POPULATION_SIZE = 16
     # print(len(init_temp))
     init = []
@@ -43,8 +43,8 @@ def main():
         # DO CROSSOVER OF PARENTS
         children = []
         for i in range(len(parents)):
-            child1, child2 = K_point_crossover(
-                np.array(mating_pool[parents[i][0]]["vector"]), np.array(mating_pool[parents[i][1]]["vector"]), crossoverprob=max(0.6, 0.85 - generation/100))
+            child1, child2 = BSC(
+                np.array(mating_pool[parents[i][0]]["vector"]), np.array(mating_pool[parents[i][1]]["vector"]), N=6+(31+generation)/20)
             children.append({"child": child1, "parents": [
                             mating_pool[parents[i][0]], mating_pool[parents[i][1]]]})
             children.append({"child": child2, "parents": [
@@ -63,12 +63,12 @@ def main():
             errors.append({"vector": child, "results": res})
             init.append({"vector": child["child"], "results": res})
         # ADD CHILDREN TO LIST
-        with open("new_gen_3.json") as f:
+        with open("new_gen_4.json") as f:
             oldres = json.load(f)
         oldres = oldres["generations"]
-        oldres.append({"generation": generation, "vectors": errors})
+        oldres.append({"generation": generation+31, "vectors": errors})
         oldres = {"generations": oldres}
-        with open("new_gen_3.json", "w") as f:
+        with open("new_gen_4.json", "w") as f:
             json.dump(oldres, f)
         mating_pool = select(init, POPULATION_SIZE)
         init = [vec for vec in init if vec not in mating_pool]
