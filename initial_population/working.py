@@ -31,8 +31,8 @@ def get_initial_value(POPULATION_SIZE, VECTOR_SIZE=11):
             if(trial != 0):
                 power = np.floor(np.log10(np.abs(trial)))
             randomNumber = ((np.random.random()*2) - 1)/100
-            temp.append(trial*(1 - (np.random.random()*2 - 1)/1000) + (randomNumber)*(10**power))
+            temp.append(trial*(1 - (np.random.random()*2 - 1) /
+                               1000) + (randomNumber)*(10**power))
         temp[0] = 0
         initial_value.append(temp)
     return initial_value
-

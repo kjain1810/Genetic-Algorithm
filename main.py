@@ -18,10 +18,6 @@ overfit_vector = [0.0, -1.45799022e-12, -2.28980078e-13,  4.62010753e-11, -1.752
                   1.83669770e-15,  8.52944060e-16,  2.29423303e-05, -2.04721003e-06, -1.59792834e-08,  9.98214034e-10]
 
 
-# TODO: cross BSC results with K-point
-# TODO: cross K-point with BSC
-# TODO: take best of k point and bsc, do k point with them
-
 def main():
     POPULATION_SIZE = 16
     init = get_best_from_all_gens(50)
@@ -37,7 +33,7 @@ def main():
         children = []
         for i in range(len(parents)):
             child1, child2 = K_point_crossover(
-                np.array(mating_pool[parents[i][0]]["vector"]), np.array(mating_pool[parents[i][1]]["vector"]), crossoverprob=max(0.6, 0.85 - generation/100) )
+                np.array(mating_pool[parents[i][0]]["vector"]), np.array(mating_pool[parents[i][1]]["vector"]), crossoverprob=max(0.6, 0.85 - generation/100))
             children.append({"child": child1, "parents": [
                             mating_pool[parents[i][0]], mating_pool[parents[i][1]]]})
             children.append({"child": child2, "parents": [

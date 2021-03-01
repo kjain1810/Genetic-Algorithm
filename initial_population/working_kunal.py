@@ -66,6 +66,7 @@ def load_inits(POPULATION_SIZE, VECTOR_SIZE=11):
     #         return inits
     return inits
 
+
 def load_prev_gens(file, generation):
     with open(file) as f:
         res = json.load(f)
@@ -86,7 +87,8 @@ def get_best_from_all_gens(POPULATION_SIZE):
         res = res["generations"]
         for gen in res:
             for vec in gen["vectors"]:
-                inits.append({"vector": vec["vector"]["child"], "results": vec["results"]})
+                inits.append(
+                    {"vector": vec["vector"]["child"], "results": vec["results"]})
     # with open("./generations.json") as f:
     #     res = json.load(f)
     # res = res["results"]
