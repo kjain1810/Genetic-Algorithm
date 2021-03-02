@@ -79,7 +79,8 @@ def load_prev_gens(file, generation):
 
 
 def get_best_from_all_gens(POPULATION_SIZE):
-    files = ["new_new_gen_5.json"]
+    files = ["new_gen_1.json", "new_gen_2.json",
+             "new_gen_3.json", "new_gen_4.json"]
     inits = []
     for file in files:
         with open(file) as f:
@@ -87,6 +88,8 @@ def get_best_from_all_gens(POPULATION_SIZE):
         res = res["generations"]
         for gen in res:
             for vec in gen["vectors"]:
+                if vec["results"] == [0, 0]:
+                    continue
                 inits.append(
                     {"vector": vec["vector"]["child"], "results": vec["results"]})
     # with open("./generations.json") as f:
