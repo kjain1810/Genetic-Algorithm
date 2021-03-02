@@ -3,7 +3,7 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 
-from client import get_errors
+from client import get_errors, submit
 from initial_population.working_kunal import load_inits, init_values, load_prev_gens, get_best_from_all_gens
 from crossover.working import K_point_crossover, BSC
 from mutation.working import mutate
@@ -16,6 +16,25 @@ VECTOR_SIZE = 11
 POPULATION_SIZE = 5
 overfit_vector = [0.0, -1.45799022e-12, -2.28980078e-13,  4.62010753e-11, -1.75214813e-10, -
                   1.83669770e-15,  8.52944060e-16,  2.29423303e-05, -2.04721003e-06, -1.59792834e-08,  9.98214034e-10]
+
+
+def submit_vector():
+    best_vec = []
+    # GET THE VALUE HERE
+
+    # SUBMITTING THE VECTOR
+    submit(TEAM_KEY, best_vec)
+
+    # SAVING THE VECTOR IN LAST VECTOR
+    f = open("last_vector.txt", "w")
+    f.write('[')
+    for i in range(len(best_vec)):
+        f.write(str(format(best_vec[i], '0.60g')))
+        if i != 10:
+            f.write(',')
+    f.write(']')
+    # IF THIS VECTOR GETS THE BEST RANK YET, DO:
+    # bash save_this_vector.sh
 
 
 def explore():
@@ -145,4 +164,5 @@ def main2():
 if __name__ == '__main__':
     # main()
     # experiment()
-    explore()
+    # explore()
+    submit_vector()
