@@ -19,17 +19,17 @@ overfit_vector = [0.0, -1.45799022e-12, -2.28980078e-13,  4.62010753e-11, -1.752
 
 
 def explore():
-    INDEX_EXPLORING = 7
+    INDEX_EXPLORING = 10
     here = get_best_from_all_gens(1)[0]
     best_vec = here["vector"]
     orig_res = here["results"]
     print(orig_res[0]/1e11, orig_res[1]/1e11)
     values = []
-    for i in range(-10, 11):
+    for i in range(-5, 5):
         if i == 0:
             continue
         copied = [j for j in best_vec]
-        toadd = i * 1e-16
+        toadd = i * 1e-15
         copied[INDEX_EXPLORING] += toadd
         # res = [0, 0]
         res = get_errors(TEAM_KEY, copied)
