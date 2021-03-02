@@ -19,7 +19,7 @@ overfit_vector = [0.0, -1.45799022e-12, -2.28980078e-13,  4.62010753e-11, -1.752
 
 
 def explore():
-    INDEX_EXPLORING = 1
+    INDEX_EXPLORING = 7
     here = get_best_from_all_gens(1)[0]
     best_vec = here["vector"]
     orig_res = here["results"]
@@ -28,12 +28,13 @@ def explore():
     for i in range(-10, 11):
         if i == 0:
             continue
-        copied = [i for i in best_vec]
-        toadd = i * 1e-1
+        copied = [j for j in best_vec]
+        toadd = i * 1e-16
         copied[INDEX_EXPLORING] += toadd
         # res = [0, 0]
         res = get_errors(TEAM_KEY, copied)
-        print(i, (fitness(res) - fitness(orig_res))/1e11)
+        print(i, res[0]/1e11, res[1]/1e11,
+              (fitness(res) - fitness(orig_res))/1e11)
         values.append({"index": INDEX_EXPLORING,
                        "difference": toadd, "results": res})
     with open("exploring.json") as f:
