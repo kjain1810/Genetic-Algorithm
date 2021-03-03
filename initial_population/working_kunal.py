@@ -3,14 +3,7 @@ import random
 import time
 import json
 
-# from ..fitness_func.working import fitness
-
-
-def fitness(res, FACTOR=0.7):
-    return res[0] * FACTOR + res[1]
-
-
-# from .working import get_initial_value
+from fitness_func.working import fitness
 
 given_data = [0.0, -1.45799022e-12, -2.28980078e-13,  4.62010753e-11, -1.75214813e-10, -
               1.83669770e-15,  8.52944060e-16,  2.29423303e-05, -2.04721003e-06, -1.59792834e-08,  9.98214034e-10]
@@ -79,8 +72,8 @@ def load_prev_gens(file, generation):
 
 
 def get_best_from_all_gens(POPULATION_SIZE):
-    files = ["new_gen_1.json", "new_gen_2.json",
-             "new_gen_3.json", "new_gen_4.json"]
+    files = ["new_gen_1.json", "new_gen_2.json", "new_gen_3.json",
+             "new_gen_4.json", "new_new_gen_5.json", "new_new_gen_6.json"]
     inits = []
     for file in files:
         with open(file) as f:
@@ -91,7 +84,7 @@ def get_best_from_all_gens(POPULATION_SIZE):
                 if vec["results"] == [0, 0]:
                     continue
                 inits.append(
-                    {"vector": vec["vector"]["child"], "results": vec["results"]})
+                    {"vector": vec["vector"]["child"], "results": vec["results"], "generation": gen["generation"]})
     # with open("./generations.json") as f:
     #     res = json.load(f)
     # res = res["results"]
@@ -105,6 +98,16 @@ def get_best_from_all_gens(POPULATION_SIZE):
         final_inits.append(inits[i])
 
     return final_inits
+
+
+def hand_picked():
+    picked_generations = [0, 2, 3, 4, 5, 10,
+                          15, 45, 48, 77, 90, 91, 94, 95, 99, 122]
+    here = get_best_from_all_gens(200)
+    ret = []
+    for i in range(len(picked_generations)):
+        ret.append(here[picked_generations[i]])
+    return ret
 
 
 if __name__ == "__main__":

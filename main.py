@@ -4,11 +4,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from client import get_errors, submit
-from initial_population.working_kunal import load_inits, init_values, load_prev_gens, get_best_from_all_gens
+from initial_population.working_kunal import load_inits, init_values, load_prev_gens, get_best_from_all_gens, hand_picked
 from crossover.working import K_point_crossover, BSC
 from mutation.working import mutate
 from fitness_func.working import fitness
-from selection.working import select, get_mating_pool
+from selection.working import select, get_mating_pool, select_from_children
 
 TEAM_KEY = "prTwq7vUkLegXASklNtVBIA7O8YxRRbYQE8LAnsDrmrx6A0fH1"
 
@@ -21,6 +21,8 @@ overfit_vector = [0.0, -1.45799022e-12, -2.28980078e-13,  4.62010753e-11, -1.752
 def submit_vector():
     best_vec = []
     # GET THE VALUE HERE
+    best_vec = [2.4809008943862348e-17, -1.4830914054704444e-12, -2.195228389294984e-13, 4.6224949074424565e-11, -1.5060191335671033e-10, -
+                1.5490975440840555e-15, 1.0829915283398237e-15, 2.7194858669377478e-05, -1.8727617881079929e-06, -1.6116286320931892e-08, 8.678455363507639e-10]
 
     # SUBMITTING THE VECTOR
     submit(TEAM_KEY, best_vec)
@@ -66,15 +68,17 @@ def explore():
 
 def main():
     POPULATION_SIZE = 16
-    init = get_best_from_all_gens(50)
-    mating_pool = select(init, POPULATION_SIZE)
-    init = [vec for vec in init if vec not in mating_pool]
-    for generation in range(1, 32):
-        print(len(init))
-        # print(len(mating_pool))
+    CHILDREN_SIZE = 20
+
+    # CREATE MATING POOL ON ITS OWN
+    mating_pool = hand_picked()
+
+    for generation in range(1, 33):
         print("Generation", generation)
+
         # SELECT PARENTS
-        parents = get_mating_pool(POPULATION_SIZE)
+        parents = get_mating_pool(POPULATION_SIZE, CHILDREN_SIZE)
+
         # DO CROSSOVER OF PARENTS
         children = []
         for i in range(len(parents)):
@@ -84,85 +88,46 @@ def main():
                             mating_pool[parents[i][0]], mating_pool[parents[i][1]]]})
             children.append({"child": child2, "parents": [
                             mating_pool[parents[i][0]], mating_pool[parents[i][1]]]})
+
         # DO MUTATIONS ON CHILDREN
         for i in range(len(children)):
-            children[i]["child"] = mutate(children[i]["child"])
+            children[i]["child"] = mutate(children[i]["child"], generation)
+
         # GET ERRORS
         errors = []
         for child in children:
             # res = [0, 0]
             res = get_errors(TEAM_KEY, child["child"].tolist())
-            print(res[0]/1e11, res[1]/1e11,
-                  np.linalg.norm(child["child"] - np.array(overfit_vector)))
-            child["child"] = child["child"].tolist()
+            print(res[0]/1e11, res[1]/1e11, fitness(res))
+            child["child"] = {
+                "vector": child["child"].tolist(), "results": res}
             errors.append({"vector": child, "results": res})
-            init.append({"vector": child["child"], "results": res})
+
         # ADD CHILDREN TO LIST
-        with open("new_new_gen_5.json") as f:
+        with open("new_new_gen_6.json") as f:
             oldres = json.load(f)
         oldres = oldres["generations"]
-        oldres.append({"generation": generation+31, "vectors": errors})
+        oldres.append({"generation": generation, "vectors": errors})
         oldres = {"generations": oldres}
-        with open("new_new_gen_5.json", "w") as f:
+        with open("new_new_gen_6.json", "w") as f:
             json.dump(oldres, f)
-        mating_pool = select(init, POPULATION_SIZE)
-        init = [vec for vec in init if vec not in mating_pool]
+
+        # SELECT BEST CHILDREN
+        mating_pool = select_from_children(
+            children, POPULATION_SIZE, CHILDREN_SIZE)
 
 
-def main1():
-    vecs = load_inits(3)
-    with open("./generations.json") as f:
-        otp = json.load(f)
-        otp = otp["results"]
-
-    # DO GENETIC ALGO
-    results = []
-    for i in range(3):
-        for j in range(i+1, 3):
-            # x1, x2 = BSC(vecs[i], vecs[j])
-            x1, x2 = K_point_crossover(vecs[i], vecs[j], 0.5, 8)
-            x1 = mutate(x1)
-            x2 = mutate(x2)
-            # print(x1)
-            # print(x2)
-            # print("")
-            res1 = get_errors(TEAM_KEY, x1.tolist())
-            res2 = get_errors(TEAM_KEY, x2.tolist())
-            results.append({"vector": x1.tolist(), "results": res1})
-            results.append({"vector": x2.tolist(), "results": res2})
-            print(res1[0]/1e11, res1[1]/1e11, x1)
-            print(res2[0]/1e11, res2[1]/1e11, x2)
-            print("")
-    results = {"generation": 3, "vectors": results, "parents": []}
-    for i in range(3):
-        results["parents"].append(vecs[i].tolist())
-    otp.append(results)
-    otp = {"results": otp}
-    with open("./generations.json", "w") as f:
-        json.dump(otp, f)
-
-
-def main2():
-    # myvecs = [overfit_vector * 2]
-    myvecs = init_values(POPULATION_SIZE, VECTOR_SIZE)
-    with open("./init_vecs.json") as f:
-        results = json.load(f)
-    # print(myvecs)
-    for vec in myvecs:
-        # print(vec)
-        res = get_errors(TEAM_KEY, vec)
-        results["vectors"].append({
-            "vector": vec,
-            "train_error": res[0],
-            "val_error": res[1]
-        })
-        print(res, vec)
-    with open("./init_vecs.json", "w") as f:
-        json.dump(results, f)
+def get_best():
+    here = get_best_from_all_gens(200)
+    here = sorted(here, key=lambda i: i["results"][1])
+    # print(here)
+    for i in range(5):
+        print(here[i]["vector"])
 
 
 if __name__ == '__main__':
-    main()
+    # main()
     # experiment()
     # explore()
-    # submit_vector()
+    # get_best()
+    submit_vector()
