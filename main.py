@@ -9,7 +9,7 @@ from client import get_errors, submit
 from initial_population.working_kunal import load_inits, init_values, load_prev_gens, get_best_from_all_gens, hand_picked
 from crossover.working import K_point_crossover, BSC
 from mutation.working import mutate
-from fitness_func.working import fitness, fitness_orig
+from fitness_func.working import fitness
 from selection.working import select, get_mating_pool, select_from_children
 
 TEAM_KEY = "prTwq7vUkLegXASklNtVBIA7O8YxRRbYQE8LAnsDrmrx6A0fH1"
@@ -21,27 +21,6 @@ overfit_vector = [0.0, -1.45799022e-12, -2.28980078e-13,  4.62010753e-11, -1.752
 
 
 random.seed(time.time())
-
-
-def submit_vector():
-    best_vec = []
-    # GET THE VALUE HERE
-    best_vec = [0.0, -1.2225186325279189e-12, -2.1994761755904783e-13, 5.152551080390546e-11, -1.3834093715792176e-10, -1.5929265880441561e-15,
-                8.197134173498726e-16, 2.7525165125385616e-05, -1.912836290662139e-06, -1.8377602559204756e-08, 9.349425579786786e-10]
-
-    # SUBMITTING THE VECTOR
-    submit(TEAM_KEY, best_vec)
-
-    # SAVING THE VECTOR IN LAST VECTOR
-    f = open("last_vector.txt", "w")
-    f.write('[')
-    for i in range(len(best_vec)):
-        f.write(str(format(best_vec[i], '0.60g')))
-        if i != 10:
-            f.write(',')
-    f.write(']')
-    # IF THIS VECTOR GETS THE BEST RANK YET, DO:
-    # bash save_this_vector.sh
 
 
 def explore():
@@ -78,7 +57,7 @@ def main():
     # CREATE MATING POOL ON ITS OWN
     mating_pool = hand_picked()
 
-    for generation in range(1, 16):
+    for generation in range(1, 21):
         print("Generation", generation)
 
         # SELECT PARENTS
@@ -113,12 +92,12 @@ def main():
             errors.append({"vector": child, "results": res})
 
         # ADD CHILDREN TO LIST
-        with open("new_new_gen_7.json") as f:
+        with open("new_new_gen_8.json") as f:
             oldres = json.load(f)
         oldres = oldres["generations"]
         oldres.append({"generation": generation, "vectors": errors})
         oldres = {"generations": oldres}
-        with open("new_new_gen_7.json", "w") as f:
+        with open("new_new_gen_8.json", "w") as f:
             json.dump(oldres, f)
 
         # SELECT BEST CHILDREN
@@ -129,9 +108,10 @@ def main():
 def get_best():
     here = get_best_from_all_gens(200)
     here = sorted(here, key=lambda i: fitness(i["results"]))
-    for i in range(200):
-        print(i, here[i]["results"][0]/1e11, here[i]
-              ["results"][1]/1e11)
+    print(here[21])
+    # for i in range(200):
+    #     print(i, here[i]["results"][0]/1e11, here[i]
+    #           ["results"][1]/1e11, here[i]["generation"])
 
 
 if __name__ == '__main__':
@@ -139,4 +119,3 @@ if __name__ == '__main__':
     # experiment()
     # explore()
     get_best()
-    # submit_vector()

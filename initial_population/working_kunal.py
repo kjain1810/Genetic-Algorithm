@@ -71,8 +71,9 @@ def load_prev_gens(file, generation):
 
 
 def get_best_from_all_gens(POPULATION_SIZE):
-    files = ["new_gen_1.json", "new_gen_2.json", "new_gen_3.json",
-             "new_gen_4.json", "new_new_gen_5.json", "fixed_6.json", "fixed_7.json"]
+    # files = ["new_gen_1.json", "new_gen_2.json", "new_gen_3.json",
+    #  "new_gen_4.json", "new_new_gen_5.json", "fixed_6.json", "fixed_7.json", "fixed_8.json"]
+    files = ["fixed_8.json"]
     inits = []
     for file in files:
         with open(file) as f:
@@ -100,8 +101,24 @@ def get_best_from_all_gens(POPULATION_SIZE):
 
 
 def hand_picked():
-    picked_generations = [0, 2, 3, 4, 5, 10,
-                          15, 45, 48, 77, 90, 91, 94, 95, 99, 122]
+    picked_generations = [
+        0,
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        9,
+        10,
+        11,
+        12,
+        13,
+        20,
+        25,
+        28,
+        30
+    ]
     here = get_best_from_all_gens(200)
     ret = []
     for i in range(len(picked_generations)):

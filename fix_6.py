@@ -1,6 +1,6 @@
 import json
 
-with open("new_new_gen_7.json") as lmao:
+with open("new_new_gen_8.json") as lmao:
     res = json.load(lmao)
 
 final = {"generations": []}
@@ -20,5 +20,5 @@ for gen in res["generations"]:
     final["generations"].append(
         {"generation": gen["generation"], "vectors": here})
 
-with open("fixed_7.json", "w+") as lmao:
+with open("fixed_8.json", "w+") as lmao:
     json.dump(final, lmao)
