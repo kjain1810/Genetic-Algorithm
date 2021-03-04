@@ -5,8 +5,6 @@ import time
 from fitness_func.working import fitness
 from initial_population.working_kunal import get_best_from_all_gens
 
-random.seed(time.time())
-
 
 def select(vecs, POPULATION_SIZE):
     vecs = sorted(vecs, key=lambda i: fitness(i["results"]))

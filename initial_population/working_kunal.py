@@ -1,9 +1,9 @@
+from fitness_func.working import fitness
 import numpy as np
 import random
 import time
 import json
 
-from fitness_func.working import fitness
 
 given_data = [0.0, -1.45799022e-12, -2.28980078e-13,  4.62010753e-11, -1.75214813e-10, -
               1.83669770e-15,  8.52944060e-16,  2.29423303e-05, -2.04721003e-06, -1.59792834e-08,  9.98214034e-10]
@@ -18,7 +18,6 @@ def init_values(POPULATION_SIZE, VECTOR_SIZE=11):
         for j in range(len(given_data)):
             here.append(given_data[j])
         initial_values.append(here)
-    random.seed(time.time())
     for i in range(POPULATION_SIZE):
         for j in range(VECTOR_SIZE):
             if j in big_change:
@@ -73,7 +72,7 @@ def load_prev_gens(file, generation):
 
 def get_best_from_all_gens(POPULATION_SIZE):
     files = ["new_gen_1.json", "new_gen_2.json", "new_gen_3.json",
-             "new_gen_4.json", "new_new_gen_5.json", "new_new_gen_6.json"]
+             "new_gen_4.json", "new_new_gen_5.json", "fixed_6.json", "fixed_7.json"]
     inits = []
     for file in files:
         with open(file) as f:

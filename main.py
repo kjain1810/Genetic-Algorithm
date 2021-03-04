@@ -1,13 +1,15 @@
 import json
-
 import numpy as np
 import matplotlib.pyplot as plt
+import random
+import time
+
 
 from client import get_errors, submit
 from initial_population.working_kunal import load_inits, init_values, load_prev_gens, get_best_from_all_gens, hand_picked
 from crossover.working import K_point_crossover, BSC
 from mutation.working import mutate
-from fitness_func.working import fitness
+from fitness_func.working import fitness, fitness_orig
 from selection.working import select, get_mating_pool, select_from_children
 
 TEAM_KEY = "prTwq7vUkLegXASklNtVBIA7O8YxRRbYQE8LAnsDrmrx6A0fH1"
@@ -18,11 +20,14 @@ overfit_vector = [0.0, -1.45799022e-12, -2.28980078e-13,  4.62010753e-11, -1.752
                   1.83669770e-15,  8.52944060e-16,  2.29423303e-05, -2.04721003e-06, -1.59792834e-08,  9.98214034e-10]
 
 
+random.seed(time.time())
+
+
 def submit_vector():
     best_vec = []
     # GET THE VALUE HERE
-    best_vec = [1.79694767322469e-17, -1.3463149567488761e-12, -2.622698735405157e-13, 3.464463692369948e-11, -1.8495942031979397e-10, -
-                1.4758817178417392e-15, 6.2921260119272845e-16, 2.6808586201629767e-05, -1.9041082629353541e-06, -1.480195471840355e-08, 8.578343062690086e-10]
+    best_vec = [0.0, -1.2225186325279189e-12, -2.1994761755904783e-13, 5.152551080390546e-11, -1.3834093715792176e-10, -1.5929265880441561e-15,
+                8.197134173498726e-16, 2.7525165125385616e-05, -1.912836290662139e-06, -1.8377602559204756e-08, 9.349425579786786e-10]
 
     # SUBMITTING THE VECTOR
     submit(TEAM_KEY, best_vec)
@@ -73,7 +78,7 @@ def main():
     # CREATE MATING POOL ON ITS OWN
     mating_pool = hand_picked()
 
-    for generation in range(1, 33):
+    for generation in range(1, 16):
         print("Generation", generation)
 
         # SELECT PARENTS
@@ -83,13 +88,17 @@ def main():
         children = []
         for i in range(len(parents)):
             child1, child2 = K_point_crossover(
-                np.array(mating_pool[parents[i][0]]["vector"]), np.array(mating_pool[parents[i][1]]["vector"]), crossoverprob=max(0.6, 0.85 - generation/100))
+                np.array(mating_pool[parents[i][0]]["vector"]), np.array(mating_pool[parents[i][1]]["vector"]), crossoverprob=min(0.8, 0.5 + generation/100))
             children.append({"child": child1, "parents": [
                             mating_pool[parents[i][0]], mating_pool[parents[i][1]]]})
             children.append({"child": child2, "parents": [
                             mating_pool[parents[i][0]], mating_pool[parents[i][1]]]})
-
-        # DO MUTATIONS ON CHILDREN
+        #     print(np.linalg.norm(child1 - np.array(
+        #         mating_pool[parents[i][0]]["vector"])), np.linalg.norm(child1 - np.array(mating_pool[parents[i][1]]["vector"])))
+        #     print(np.linalg.norm(child2 - np.array(
+        #         mating_pool[parents[i][0]]["vector"])), np.linalg.norm(child2 - np.array(mating_pool[parents[i][1]]["vector"])))
+        #     print("")
+        # # DO MUTATIONS ON CHILDREN
         for i in range(len(children)):
             children[i]["child"] = mutate(children[i]["child"], generation)
 
@@ -104,12 +113,12 @@ def main():
             errors.append({"vector": child, "results": res})
 
         # ADD CHILDREN TO LIST
-        with open("new_new_gen_6.json") as f:
+        with open("new_new_gen_7.json") as f:
             oldres = json.load(f)
         oldres = oldres["generations"]
         oldres.append({"generation": generation, "vectors": errors})
         oldres = {"generations": oldres}
-        with open("new_new_gen_6.json", "w") as f:
+        with open("new_new_gen_7.json", "w") as f:
             json.dump(oldres, f)
 
         # SELECT BEST CHILDREN
@@ -119,15 +128,15 @@ def main():
 
 def get_best():
     here = get_best_from_all_gens(200)
-    here = sorted(here, key=lambda i: i["results"][1])
-    # print(here)
-    for i in range(5):
-        print(here[i]["vector"])
+    here = sorted(here, key=lambda i: fitness(i["results"]))
+    for i in range(200):
+        print(i, here[i]["results"][0]/1e11, here[i]
+              ["results"][1]/1e11)
 
 
 if __name__ == '__main__':
     # main()
     # experiment()
     # explore()
-    # get_best()
-    submit_vector()
+    get_best()
+    # submit_vector()

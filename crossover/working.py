@@ -19,6 +19,7 @@ def point_crossover(vec1, vec2, crossoverpoint, VECTOR_SIZE=11):
 
 def K_point_crossover(vec1, vec2, crossoverprob, VECTOR_SIZE=11):
     # BEKAAR
+    # print(vec1, vec2)
     ret1 = np.copy(vec1)
     ret2 = np.copy(vec2)
     for i in range(VECTOR_SIZE):
