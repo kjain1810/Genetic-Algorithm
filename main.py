@@ -57,7 +57,7 @@ def main():
     # CREATE MATING POOL ON ITS OWN
     mating_pool = hand_picked()
 
-    for generation in range(1, 21):
+    for generation in range(1, 36):
         print("Generation", generation)
 
         # SELECT PARENTS
@@ -66,8 +66,8 @@ def main():
         # DO CROSSOVER OF PARENTS
         children = []
         for i in range(len(parents)):
-            child1, child2 = K_point_crossover(
-                np.array(mating_pool[parents[i][0]]["vector"]), np.array(mating_pool[parents[i][1]]["vector"]), crossoverprob=min(0.8, 0.5 + generation/100))
+            child1, child2 = BSC(
+                np.array(mating_pool[parents[i][0]]["vector"]), np.array(mating_pool[parents[i][1]]["vector"]), N=min(6, 3+generation/10))
             children.append({"child": child1, "parents": [
                             mating_pool[parents[i][0]], mating_pool[parents[i][1]]]})
             children.append({"child": child2, "parents": [
@@ -84,20 +84,20 @@ def main():
         # GET ERRORS
         errors = []
         for child in children:
-            # res = [0, 0]
-            res = get_errors(TEAM_KEY, child["child"].tolist())
+            res = [0, 0]
+            # res = get_errors(TEAM_KEY, child["child"].tolist())
             print(res[0]/1e11, res[1]/1e11, fitness(res))
             child["child"] = {
                 "vector": child["child"].tolist(), "results": res}
             errors.append({"vector": child, "results": res})
 
         # ADD CHILDREN TO LIST
-        with open("new_new_gen_8.json") as f:
+        with open("new_new_gen_9.json") as f:
             oldres = json.load(f)
         oldres = oldres["generations"]
         oldres.append({"generation": generation, "vectors": errors})
         oldres = {"generations": oldres}
-        with open("new_new_gen_8.json", "w") as f:
+        with open("new_new_gen_9.json", "w") as f:
             json.dump(oldres, f)
 
         # SELECT BEST CHILDREN
@@ -108,10 +108,18 @@ def main():
 def get_best():
     here = get_best_from_all_gens(200)
     here = sorted(here, key=lambda i: fitness(i["results"]))
-    print(here[21])
+    # print(here[21])
     # for i in range(200):
     #     print(i, here[i]["results"][0]/1e11, here[i]
     #           ["results"][1]/1e11, here[i]["generation"])
+    to_select = [
+        1, 2, 3, 5,
+        10, 11, 12, 13, 18,
+        20, 21, 25, 26, 31,
+        49, 48, 64, 71, 91, 92
+    ]
+    for i in to_select:
+        print(here[i])
 
 
 if __name__ == '__main__':
