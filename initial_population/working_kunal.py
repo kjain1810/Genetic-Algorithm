@@ -95,8 +95,8 @@ def get_best_from_all_gens(POPULATION_SIZE):
     inits = sorted(inits, key=lambda i: fitness(i["results"]))
     final_inits = []
     for i in range(len(inits)):
-        if abs(inits[i]["results"][0] - inits[i]["results"][1])/1e11 <= 0.6:
-            final_inits.append(inits[i])
+        # if abs(inits[i]["results"][0] - inits[i]["results"][1])/1e11 <= 0.6:
+        final_inits.append(inits[i])
         if len(final_inits) == POPULATION_SIZE:
             break
     return final_inits
@@ -129,10 +129,14 @@ def hand_picked():
 
 
 def load_to_submit():
-    here = get_best_from_all_gens(200)
-    to_select = [
-        0
-    ]
+    here = get_best_from_all_gens(600)
+    to_select = []
+    for i in range(10):
+        to_select.append(random.randint(0, 199))
+    for i in range(10):
+        to_select.append(random.randint(200, 399))
+    for i in range(10):
+        to_select.append(random.randint(400, 599))
     ret = []
     for i in to_select:
         ret.append(here[i])

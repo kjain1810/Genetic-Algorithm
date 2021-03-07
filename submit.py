@@ -20,7 +20,6 @@ def submit_vector():
         f.write("\n")
         f.write(rank)
         f.write("\n")
-        i += 1
     # IF THIS VECTOR GETS THE BEST RANK YET, DO:
     # bash save_this_vector.sh
     f.close()

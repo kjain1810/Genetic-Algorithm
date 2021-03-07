@@ -108,18 +108,13 @@ def main():
 def get_best():
     here = get_best_from_all_gens(200)
     here = sorted(here, key=lambda i: fitness(i["results"]))
-    # print(here[21])
-    # for i in range(200):
-    #     print(i, here[i]["results"][0]/1e11, here[i]
-    #           ["results"][1]/1e11, here[i]["generation"])
-    to_select = [
-        1, 2, 3, 5,
-        10, 11, 12, 13, 18,
-        20, 21, 25, 26, 31,
-        49, 48, 64, 71, 91, 92
-    ]
-    for i in to_select:
-        print(here[i])
+    for i in range(200):
+        print(i, here[i]["results"][0]/1e11, here[i]
+              ["results"][1]/1e11, here[i]["generation"])
+
+    # print(here[48])
+    # for i in to_select:
+    #     print(here[i])
 
 
 if __name__ == '__main__':
