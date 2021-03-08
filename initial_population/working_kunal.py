@@ -131,11 +131,11 @@ def hand_picked():
 def load_to_submit():
     here = get_best_from_all_gens(600)
     to_select = []
-    for i in range(10):
+    for i in range(20):
         to_select.append(random.randint(0, 199))
-    for i in range(10):
+    for i in range(20):
         to_select.append(random.randint(200, 399))
-    for i in range(10):
+    for i in range(20):
         to_select.append(random.randint(400, 599))
     ret = []
     for i in to_select:
