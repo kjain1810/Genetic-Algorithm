@@ -16,7 +16,6 @@ overfit_vector = [0.0, -1.45799022e-12, -2.28980078e-13,  4.62010753e-11, -1.752
 
 F_INIT_POPULATION = "mating_pool.json"
 F_DUMP_FILE = "dump.json"
-NUM_GENERATIONS = 35
 
 # FITNESS FUNCTION
 
@@ -91,8 +90,9 @@ def select(children, POPULATION_SIZE, CHILDREN_SIZE):
 
 
 def main():
-    POPULATION_SIZE = 16
-    CHILDREN_SIZE = 20
+    POPULATION_SIZE = 8
+    CHILDREN_SIZE = 10
+    NUM_GENERATIONS = 4
 
     mating_pool = []
     overalls = []
@@ -129,9 +129,9 @@ def main():
         ############################ GET ERRORS #########################
         errors = []
         for child in children:
-            res = [random.rand(), random.rand()]
+            res = [random.random(), random.random()]
             # UNCOMMENT TO MAKE QUERIES!!
-            # res = get_errors(TEAM_KEY, child["child"].tolist())
+            res = get_errors(TEAM_KEY, child["child"].tolist())
             child["child"] = {
                 "vector": child["child"].tolist(), "results": res}
             errors.append({"vector": child, "results": res})
