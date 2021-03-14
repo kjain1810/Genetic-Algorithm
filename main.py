@@ -56,10 +56,9 @@ def main():
 
     # CREATE MATING POOL ON ITS OWN
     mating_pool = hand_picked()
-
-    for generation in range(1, 36):
+    for generation in range(1, 11):
         print("Generation", generation)
-
+        gen_here = {"crossed_over": [], "mutated": [], "selected": []}
         # SELECT PARENTS
         parents = get_mating_pool(POPULATION_SIZE, CHILDREN_SIZE)
 
@@ -72,20 +71,18 @@ def main():
                             mating_pool[parents[i][0]], mating_pool[parents[i][1]]]})
             children.append({"child": child2, "parents": [
                             mating_pool[parents[i][0]], mating_pool[parents[i][1]]]})
-        #     print(np.linalg.norm(child1 - np.array(
-        #         mating_pool[parents[i][0]]["vector"])), np.linalg.norm(child1 - np.array(mating_pool[parents[i][1]]["vector"])))
-        #     print(np.linalg.norm(child2 - np.array(
-        #         mating_pool[parents[i][0]]["vector"])), np.linalg.norm(child2 - np.array(mating_pool[parents[i][1]]["vector"])))
-        #     print("")
+            gen_here["crossed_over"].append(child1.tolist())
+            gen_here["crossed_over"].append(child2.tolist())
+
         # # DO MUTATIONS ON CHILDREN
         for i in range(len(children)):
             children[i]["child"] = mutate(children[i]["child"], generation)
-
+            gen_here["mutated"].append(children[i]["child"].tolist())
         # GET ERRORS
         errors = []
         for child in children:
-            res = [0, 0]
-            # res = get_errors(TEAM_KEY, child["child"].tolist())
+            # res = [0, 0]
+            res = get_errors(TEAM_KEY, child["child"].tolist())
             print(res[0]/1e11, res[1]/1e11, fitness(res))
             child["child"] = {
                 "vector": child["child"].tolist(), "results": res}
@@ -103,6 +100,10 @@ def main():
         # SELECT BEST CHILDREN
         mating_pool = select_from_children(
             children, POPULATION_SIZE, CHILDREN_SIZE)
+        for mat in mating_pool:
+            gen_here["selected"].append(mat["vector"])
+        with open("generations/generation_" + str(generation) + ".txt", "w+") as f:
+            json.dump(gen_here, f)
 
 
 def get_best():
@@ -118,7 +119,7 @@ def get_best():
 
 
 if __name__ == '__main__':
-    # main()
+    main()
     # experiment()
     # explore()
-    get_best()
+    # get_best()
