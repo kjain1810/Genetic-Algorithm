@@ -84,7 +84,7 @@ def get_best_from_all_gens(POPULATION_SIZE):
                 if vec["results"] == [0, 0]:
                     continue
                 inits.append(
-                    {"vector": vec["vector"]["child"], "results": vec["results"], "generation": gen["generation"]})
+                    {"vector": vec["vector"]["child"], "results": vec["results"], "generation": gen["generation"], "file": file})
     # with open("./generations.json") as f:
     #     res = json.load(f)
     # res = res["results"]

@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 import time
+from operator import itemgetter
 
 
 from client import get_errors, submit
@@ -110,14 +111,31 @@ def get_best():
     here = get_best_from_all_gens(200)
     here = sorted(here, key=lambda i: fitness(i["results"]))
     for i in range(200):
-        print(i, here[i]["results"][0]/1e11, here[i]
-              ["results"][1]/1e11, here[i]["generation"])
+        if(i==2):
+            get_vector_history(here[i]["vector"], here[i]["file"])
+            break
+        # print(i, here[i]["results"][0]/1e11, here[i]
+        #       ["results"][1]/1e11, here[i]["generation"], here[i]["file"])
 
     # print(here[48])
     # for i in to_select:
     #     print(here[i])
 
-
+def get_vector_history(vector, file):
+    with open(file) as f:
+        res = json.load(f)
+    res = res["generations"]
+    res = sorted(res, key = lambda i: -i["generation"])
+    family_vectors = []
+    family_vectors.append({"generation": res[0]["generation"], "vector": vector})
+    # print(res[0])
+    for gen in res:
+        for vec in gen["vectors"]:
+            if(vec["vector"]["child"] in list(map(itemgetter("vector"), family_vectors))):
+                family_vectors.append({"generation": gen["generation"]-1, "vector": vec["vector"]["parents"][0]["vector"]})
+                family_vectors.append({"generation": gen["generation"]-1, "vector": vec["vector"]["parents"][1]["vector"]})
+    for j in family_vectors:
+        print(j["generation"])
 if __name__ == '__main__':
     main()
     # experiment()
